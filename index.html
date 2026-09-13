@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Підготовка країн до Першої світової війни: плани та реальність</title>
+    <!-- Фавікон вкладки -->
+    <link rel="icon" type="image/jpeg" href="blocks.jpg">
+    <style>
+        :root {
+            --bg-color: #F6F1E7;
+            --text-color: #292A2D;
+            --entente-color: #536F86;
+            --entente-light: #E7EDF1;
+            --alliance-color: #824B50;
+            --alliance-light: #F1E5E4;
+            --accent-color: #B7795F;
+            --border-color: #D8D0C3;
+            --success-color: #71816F;
+            --italy-step2: #F2F0EA;
+            --white: #FFFFFF;
+            --error-color: #B15F58;
+
+            --quiz-card-bg: #FAF8F3;
+            --quiz-option-bg: #F5F1E8;
+            --quiz-explanation-bg: #EFE9DE;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 20px 15px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+        }
+
+        header .subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        .page-nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 12px;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-nav-btn {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .page-nav-btn.active, .page-nav-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--white);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+
+        .block-section {
+            display: none;
+        }
+
+        .block-section.active {
+            display: block;
+        }
+
+        .map-container {
+            margin-bottom: 25px;
+            text-align: center;
+            background: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .map-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            margin: 0;
+            padding: 20px;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(41, 42, 45, 0.95);
+        }
+
+        .map-container img {
+            max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: max-height 0.3s ease;
+        }
+
+        .map-container.fullscreen img {
+            max-height: 70vh;
+        }
+
+        /* Інформація під картою з'являється лише у повноекранному режимі */
+        .map-info {
+            display: none;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--white);
+            flex-direction: column;
+            gap: 4px;
+            text-align: center;
+        }
+
+        .map-container.fullscreen .map-info {
+            display: flex;
+        }
+
+        .map-info .image-title {
+            font-weight: 600;
+        }
+
+        .map-info .image-source a {
+            color: #E7EDF1;
+            text-decoration: underline;
+        }
+
+        .map-toggle-btn {
+            margin-top: 8px;
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .map-toggle-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Збалансована компактна сітка карток */
+        .countries-schema-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .countries-schema-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .schema-column-pair {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .schema-column-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .germany-wrapper {
+            width: 100%;
+            margin-top: 98px; 
+        }
+
+        .italy-wrapper {
+            width: 100%;
+            margin-top: 75px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .italy-wrapper .country-card {
+            width: 100%;
+        }
+
+        .country-card {
+            border-radius: 8px;
+            padding: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .country-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .country-card.entente {
+            background-color: var(--entente-light);
+            border-left: 6px solid var(--entente-color);
+        }
+
+        .country-card.alliance {
+            background-color: var(--alliance-light);
+            border-left: 6px solid var(--alliance-color);
+        }
+
+        .country-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .country-header h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .country-badge {
+            display: inline-block;
+            background-color: var(--italy-step2);
+            color: var(--text-color);
+            font-size: 0.78rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .country-card img.mini-map {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Модальне вікно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(41, 42, 45, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 950px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 95vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 45% 52%;
+            gap: 25px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+        }
+
+        .modal-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .modal-left-col img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            cursor: zoom-in;
+            background-color: var(--white);
+        }
+
+        .image-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .image-source {
+            font-size: 0.78rem;
+            color: #444;
+        }
+
+        .image-source a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .image-source a:hover {
+            text-decoration: underline;
+        }
+
+        .modal-right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            word-break: break-word;
+        }
+
+        .step-title-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 1px;
+        }
+
+        .step-type-text {
+            font-size: 0.78rem;
+            color: var(--accent-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step-opponent-text {
+            font-size: 0.83rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .step-desc-text {
+            font-size: 0.83rem;
+            color: var(--text-color);
+            line-height: 1.35;
+        }
+
+        .wiki-link-btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 3px;
+            font-size: 0.8rem;
+            width: fit-content; 
+        }
+
+        .wiki-link-btn:hover {
+            opacity: 0.9;
+        }
+
+        .modal-footer {
+            padding: 10px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.01);
+        }
+
+        .modal-nav-btn {
+            background-color: var(--text-color);
+            color: var(--white);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .modal-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .step-indicators {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Повноекранна галерея */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-size: 2.2rem;
+            cursor: pointer;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent-color);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: none;
+            font-size: 2rem;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .lightbox-prev { left: -60px; }
+        .lightbox-next { right: -60px; }
+
+        @media (max-width: 768px) {
+            .lightbox-prev { left: 10px; }
+            .lightbox-next { right: 10px; }
+        }
+
+        /* Блок 2: Самоперевірка та роздуми */
+        .section-title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+        }
+
+        .quiz-container, .reflection-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .quiz-card, .reflection-card {
+            background: var(--quiz-card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .quiz-question, .reflection-question {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1.02rem;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .option-btn {
+            background-color: var(--quiz-option-bg);
+            border: 1px solid var(--border-color);
+            padding: 9px 12px;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.93rem;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--border-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color) !important;
+            color: var(--white) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--error-color) !important;
+            color: var(--white) !important;
+        }
+
+        .try-again-msg {
+            font-size: 0.82rem;
+            color: var(--error-color);
+            font-weight: 600;
+            display: none;
+        }
+
+        .try-again-msg.visible {
+            display: inline-block;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            padding: 8px 12px;
+            background-color: var(--quiz-explanation-bg);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+            display: none;
+        }
+
+        .explanation.visible {
+            display: block;
+        }
+
+        .hint-toggle-btn {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .hint-toggle-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--white);
+        }
+
+        .hint-content {
+            margin-top: 8px;
+            font-size: 0.88rem;
+            padding: 8px;
+            background-color: var(--quiz-explanation-bg);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+
+        .reset-quiz-btn {
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .reset-quiz-btn:hover {
+            opacity: 0.9;
+        }
+
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 42px;
+            height: 42px;
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.88rem;
+            background-color: var(--bg-color);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="subtitle">Всесвітня історія</div>
+        <h1>Підготовка країн до Першої світової війни: плани та реальність</h1>
+    </header>
+
+    <div class="page-nav-bar">
+        <button class="page-nav-btn active" onclick="switchBlock(1)">1. Карта та картки країн</button>
+        <button class="page-nav-btn" onclick="switchBlock(2)">2. Самоперевірка та роздуми</button>
+    </div>
+
+    <main>
+        <!-- БЛОК 1 -->
+        <section id="block-1" class="block-section active">
+            <div class="map-container" id="mapContainer">
+                <img src="blocks.jpg" alt="Карта військових союзів напередодні війни" id="mainMapImg" onclick="toggleMapFullscreen()">
+                <div class="map-info">
+                    <div class="image-title">Карта військових союзів напередодні Першої світової війни</div>
+                    <div class="image-source">Джерело: <a href="https://compass.rauias.com/world-history/events-that-shaped-ww-1-part2/" target="_blank">Compass — World History Events</a></div>
+                </div>
+                <br>
+                <button class="map-toggle-btn" onclick="toggleMapFullscreen()">Розгорнути на весь екран / Згорнути</button>
+            </div>
+
+            <!-- Компактна сітка карток -->
+            <div class="countries-schema-grid">
+                <!-- Ліва колонка (Франція + Велика Британія) -->
+                <div class="schema-column-pair">
+                    <div class="country-card entente" onclick="openCountryModal('france')">
+                        <div class="country-header"><h3>Франція</h3></div>
+                        <img src="france_step1.jpg" alt="Франція" class="mini-map">
+                        <span class="country-badge" style="background-color: var(--entente-light); border-color: var(--entente-color);">Антанта</span>
+                    </div>
+                    <div class="country-card entente" onclick="openCountryModal('uk')">
+                        <div class="country-header"><h3>Велика Британія</h3></div>
+                        <img src="uk_step1.jpg" alt="Велика Британія" class="mini-map">
+                        <span class="country-badge" style="background-color: var(--entente-light); border-color: var(--entente-color);">Антанта</span>
+                    </div>
+                </div>
+
+                <!-- Центральна колонка (Німеччина та Італія) -->
+                <div class="schema-column-center">
+                    <div class="germany-wrapper">
+                        <div class="country-card alliance" onclick="openCountryModal('germany')">
+                            <div class="country-header"><h3>Німеччина</h3></div>
+                            <img src="germany_step1.jpg" alt="Німеччина" class="mini-map">
+                            <span class="country-badge" style="background-color: var(--alliance-light); border-color: var(--alliance-color);">Троїстий союз</span>
+                        </div>
+                    </div>
+                    <div class="italy-wrapper">
+                        <div class="country-card alliance" onclick="openCountryModal('italy')">
+                            <div class="country-header"><h3>Італія</h3></div>
+                            <img src="italy_step1.jpg" alt="Італія" class="mini-map">
+                            <span class="country-badge" style="background-color: var(--italy-step2); border-color: var(--border-color);">Троїстий союз → Нейтралітет у 1914 → Антанта</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Права колонка (Росія + Австро-Угорщина) -->
+                <div class="schema-column-pair">
+                    <div class="country-card entente" onclick="openCountryModal('russia')">
+                        <div class="country-header"><h3>Російська імперія</h3></div>
+                        <img src="russia_step1.jpg" alt="Російська імперія" class="mini-map">
+                        <span class="country-badge" style="background-color: var(--entente-light); border-color: var(--entente-color);">Антанта</span>
+                    </div>
+                    <div class="country-card alliance" onclick="openCountryModal('austria')">
+                        <div class="country-header"><h3>Австро-Угорщина</h3></div>
+                        <img src="austria_step1.jpg" alt="Австро-Угорщина" class="mini-map">
+                        <span class="country-badge" style="background-color: var(--alliance-light); border-color: var(--alliance-color);">Троїстий союз</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- БЛОК 2 -->
+        <section id="block-2" class="block-section">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">Перевір себе</h2>
+                <button class="reset-quiz-btn" onclick="resetQuiz()">Почати заново</button>
+            </div>
+            
+            <div class="quiz-container" id="quizContainer"></div>
+            <div class="quiz-controls">
+                <button class="reset-quiz-btn" onclick="resetQuiz()">Почати заново</button>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 35px; border-bottom: 2px solid var(--border-color); padding-bottom: 6px; margin-bottom: 18px;">Питання для роздумів</h2>
+            <div class="reflection-container">
+                <div class="reflection-card">
+                    <div class="reflection-question">Питання 1: Чому військовий план, який здавався логічним на карті, міг не спрацювати в реальній війні?</div>
+                    <button class="hint-toggle-btn" onclick="toggleHint(this)">Показати підказку</button>
+                    <div class="hint-content">Підказка: На карті плану немає несподіваних подій, опору противника, помилок командування та проблем із постачанням. А тепер подумай: який із цих чинників найсильніше міг змінити хід наступу Німеччини в серпні 1914 року?</div>
+                </div>
+                <div class="reflection-card">
+                    <div class="reflection-question">Питання 2: Чому Велика Британія, яка не планувала такої масштабної сухопутної війни, усе ж виявилася важливим учасником подій на Західному фронті?</div>
+                    <button class="hint-toggle-btn" onclick="toggleHint(this)">Показати підказку</button>
+                    <div class="hint-content">Підказка: Подивись, через яку країну рухалася німецька армія та що сталося з її нейтралітетом. А тепер подумай: чому порушення нейтралітету Бельгії мало значення саме для Великої Британії?</div>
+                </div>
+                <div class="reflection-card">
+                    <div class="reflection-question">Питання 3: Чому перші успіхи Німеччини у війні не означали, що План Шліффена спрацював?</div>
+                    <button class="hint-toggle-btn" onclick="toggleHint(this)">Показати підказку</button>
+                    <div class="hint-content">Підказка: Порівняй мету плану з результатом перших тижнів війни. Німеччина мала не просто просунутися територією Франції, а швидко розгромити її армію. А тепер подумай: яка подія у вересні 1914 року остаточно показала, що швидкої перемоги не буде?</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальне вікно для карток країн -->
+    <div class="modal-overlay" id="countryModalOverlay" onclick="handleModalOutsideClick(event)">
+        <div class="modal-content" id="countryModalContent">
+            <div class="modal-header">
+                <h2 id="modalCountryTitle">Назва країни</h2>
+                <button class="close-modal-btn" onclick="closeCountryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-left-col">
+                    <img id="modalStepImg" src="" alt="Карта етапу" onclick="openLightbox()" title="Натисніть, щоб збільшити">
+                    <div class="image-title" id="modalImgTitle">Назва</div>
+                    <div class="image-source" id="modalImgSource">Джерело</div>
+                </div>
+                <div class="modal-right-col">
+                    <div class="step-title-text" id="modalStepName">Назва плану/події</div>
+                    <div class="step-type-text" id="modalStepType">ТИП</div>
+                    <div class="step-opponent-text" id="modalStepOpponent">Основний противник: ...</div>
+                    <div class="step-desc-text" id="modalStepDesc">Опис етапу...</div>
+                    <a id="modalWikiLink" href="#" target="_blank" class="wiki-link-btn">Стаття у Вікіпедії</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-nav-btn" id="modalPrevBtn" onclick="changeModalStep(-1)">Назад</button>
+                <span class="step-indicators" id="modalStepIndicator">Крок 1 з 3</span>
+                <button class="modal-nav-btn" id="modalNextBtn" onclick="changeModalStep(1)">Далі</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Повноекранна галерея -->
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOnOutside(event)">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <button class="lightbox-nav lightbox-prev" onclick="changeLightboxStep(-1)">&#10094;</button>
+            <img id="lightboxImg" src="" alt="Повноекранне зображення">
+            <button class="lightbox-nav lightbox-next" onclick="changeLightboxStep(1)">&#10095;</button>
+        </div>
+    </div>
+
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+    <footer>
+        Створено Ольгою Герінбург
+    </footer>
+
+    <script>
+        const countriesData = {
+            germany: {
+                name: "Німеччина",
+                blockType: "alliance",
+                steps: [
+                    { 
+                        img: "germany_step1.jpg", 
+                        stepName: "Оригінальний план Шліффена (1905)", 
+                        type: "ТИП: НАСТУПАЛЬНИЙ ПЛАН", 
+                        opponent: "Основний противник: Франція та Росія", 
+                        desc: "Німецький Генеральний штаб готувався до можливої війни на два фронти — проти Франції та Росії. Альфред фон Шліффен запропонував спочатку зосередити основні сили на Заході й завдати Франції швидкої поразки, поки Росія завершуватиме мобілізацію. Німецькі війська мали обійти французькі укріплення з півночі, пройшовши через нейтральні Бельгію та Люксембург, оточити основні сили французької армії та змусити Францію капітулювати. Після цього передбачалося перекинути основні сили на Схід проти Росії.<br><br><strong>Результат:</strong> Задум передбачав швидкий розгром Франції на Заході перед переходом до війни проти Росії.", 
+                        wiki: "https://uk.wikipedia.org/wiki/План_Шліффена",
+                        imgTitle: "Оригінальний план Шліффена, 1905 р.",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Schlieffen_Plan_fr.svg' target='_blank'>Tinodela через Вікісховище (CC BY-SA 3.0)</a>"
+                    },
+                    { 
+                        img: "germany_step2.jpg", 
+                        stepName: "Модифікації Мольтке (1906–1914)", 
+                        type: "ТИП: НАСТУПАЛЬНИЙ ПЛАН", 
+                        opponent: "Основний противник: Франція та Росія", 
+                        desc: "Після призначення начальником Генерального штабу Гельмут фон Мольтке-молодший поступово переглядав задум Шліффена. Німецьке командування посилило сили на Східному фронті та приділило більше уваги обороні Ельзасу-Лотарингії. Одночасно наступальне угруповання на правому фланзі було послаблене порівняно з початковим задумом. Мольтке також відмовився від проходу через Нідерланди, залишивши їх нейтральними. У серпні 1914 року німецькі війська здійснили наступ через Люксембург і Бельгію.<br><br><strong>Результат:</strong> Захід залишився головним напрямом, але наступальне угруповання було менш концентрованим, ніж у початковому задумі Шліффена.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Гельмут_Мольтке_(молодший)",
+                        imgTitle: "Модифікації плану Мольтке, 1906–1914 рр.",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Plan_Moltke-Schlieffen_1914.svg' target='_blank'>Lvcvlvs через Вікісховище (CC BY-SA 3.0)</a>"
+                    },
+                    { 
+                        img: "germany_step3.jpg", 
+                        stepName: "Наступ на Заході та битва на кордонах (серпень 1914 р.)", 
+                        type: "ТИП: РЕАЛЬНІ ВІЙСЬКОВІ ОПЕРАЦІЇ", 
+                        opponent: "Основний напрям: Бельгія → Північна Франція", 
+                        desc: "Німеччина розпочала наступ на Заході, реалізуючи змінений план Шліффена—Мольтке. Німецькі війська вторглися в нейтральну Бельгію та рушили до Франції, тоді як на сході Росія несподівано швидко розпочала наступ у Східній Пруссії. У серпні відбулися перші великі бої — Битва на кордонах. Німецьке командування досягло значних успіхів, але швидкого розгрому Франції, на який розраховували довоєнні плани, досягти не вдалося.<br><br><strong>Результат:</strong> Початок наступу був успішним, але швидкої перемоги на Заході Німеччина не здобула.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Битва_на_Марні_(1914)",
+                        imgTitle: "Наступ німецьких військ на Заході, серпень 1914 р.",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Bataille_des_Fronti%C3%A8res.svg' target='_blank'>Lvcvlvs через Вікісховище (CC BY-SA 3.0)</a>"
+                    }
+                ]
+            },
+            france: {
+                name: "Франція",
+                blockType: "entente",
+                steps: [
+                    { 
+                        img: "france_step1.jpg", 
+                        stepName: "План XVII (1912)", 
+                        type: "ТИП: МОБІЛІЗАЦІЯ ТА РОЗГОРТАННЯ", 
+                        opponent: "Основний противник: Німеччина", 
+                        desc: "Французький Генеральний штаб на чолі з Жозефом Жоффром розробив план мобілізації, зосередження та розгортання армії на випадок війни з Німеччиною. Основні сили мали бути зосереджені поблизу східного кордону Франції. План передбачав наступальні дії через франко-німецький кордон із метою повернення Ельзасу та Лотарингії. План XVII був схемою мобілізації та розгортання, яка створювала умови для наступу.<br><br><strong>Результат:</strong> Французька армія мала швидко мобілізуватися, зосередитися на східному кордоні та перейти в наступ проти Німеччини.", 
+                        wiki: "https://uk.wikipedia.org/wiki/План_XVII",
+                        imgTitle: "План XVII французького командування, 1912 р.",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Plan_XVII.svg' target='_blank'>Lvcvlvs через Вікісховище (CC BY-SA 3.0)</a>"
+                    },
+                    { 
+                        img: "france_step2.jpg", 
+                        stepName: "Битва на кордонах та наступ Франції (серпень 1914 р.)", 
+                        type: "ТИП: РЕАЛЬНІ ВІЙСЬКОВІ ОПЕРАЦІЇ", 
+                        opponent: "Основний напрям: Ельзас і Лотарингія", 
+                        desc: "Французька армія розпочала наступ відповідно до задумів Плану XVII, прагнучи повернути Ельзас і Лотарингію. Французькі війська просунулися на окремих напрямках, але зіткнулися з потужним німецьким наступом через Бельгію. Французьке командування запізно усвідомило масштаб німецького обходу через Бельгію, що створило загрозу оточення армії. Після серії поразок французька армія була змушена відступити.<br><br><strong>Результат:</strong> Наступ за Планом XVII не досяг поставленої мети, а французьке командування перейшло до оборони й перегрупування сил.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Прикордонна_битва_(1914)",
+                        imgTitle: "Прикордонна битва та наступ французьких військ",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Bataille_des_Fronti%C3%A8res.svg' target='_blank'>Lvcvlvs через Вікісховище (CC BY-SA 3.0)</a>"
+                    },
+                    { 
+                        img: "france_step3.jpg", 
+                        stepName: "Великий відступ і битва на Марні (кінець серпня — вересень 1914 р.)", 
+                        type: "ТИП: ВІДСТУП І КОНТРНАСТУП", 
+                        opponent: "Основний напрям: Північна Франція → Марна", 
+                        desc: "Після невдалого наступу в Ельзасі та Лотарингії й поразок у Прикордонній битві французькі війська почали відступ на південь. Головне завдання французького командування полягало в тому, щоб зберегти армію, перегрупувати її та зупинити німецький наступ. 6–12 вересня французькі війська разом із британським експедиційним корпусом перейшли в контрнаступ у битві на Марні. Німецькі армії були змушені відступити на північ.<br><br><strong>Результат:</strong> Париж утримано, німецький наступ зупинено; Західний фронт стабілізувався.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Битва_на_Марні_(1914)",
+                        imgTitle: "Великий відступ та підготовка до контрнаступу",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:The_Great_Retreat,_August_and_September_1914.jpg' target='_blank'>George Herbert Perris, Public domain через Вікісховище</a>"
+                    }
+                ]
+            },
+            uk: {
+                name: "Велика Британія",
+                blockType: "entente",
+                steps: [
+                    { 
+                        img: "uk_step1.jpg", 
+                        stepName: "Планування участі у війні (до 1914 р.)", 
+                        type: "ТИП: СТРАТЕГІЧНЕ ТА ТРАНСПОРТНЕ ПЛАНУВАННЯ", 
+                        opponent: "Основний напрям: Велика Британія → Франція", 
+                        desc: "Велика Британія не готувала масштабної сухопутної армії для війни на континенті. Основою британської стратегії був Королівський флот, який мав контролювати Північне море та блокувати Німеччину. На випадок війни з Німеччиною передбачалося перекидання до Франції професійного Британського експедиційного корпусу (BEF) для підтримки французької армії.<br><br><strong>Результат:</strong> Британія планувала поєднати морську блокаду Німеччини з обмеженою, але професійною сухопутною підтримкою Франції.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Британський_експедиційний_корпус",
+                        imgTitle: "Висадка Британського експедиційного корпусу у Франції",
+                        imgSource: "Джерело: <a href='https://collection.nam.ac.uk/detail.php?acc=1979-09-2-1' target='_blank'>В. Воллен / National Army Museum</a>"
+                    },
+                    { 
+                        img: "uk_step2.jpg", 
+                        stepName: "Битва на кордонах: Монс і Шарлеруа (22–23 серпня 1914 р.)", 
+                        type: "ТИП: ПЕРШІ БОЙОВІ ДІЇ", 
+                        opponent: "Основний напрям: Бельгія → Північна Франція", 
+                        desc: "Після вторгнення Німеччини в нейтральну Бельгію Велика Британія вступила у війну 4 серпня 1914 року. BEF був переправлений через Ла-Манш і розгорнутий на лівому фланзі французької армії. 22–23 серпня британські війська вступили в бій із німецькою Першою армією біля Монса, тоді як на південь від них французька армія билася з німецькими військами біля Шарлеруа. Обидві битви стали частиною Прикордонної битви та завершилися загальним відходом французьких і британських сил.<br><br><strong>Результат:</strong> Союзні війська почали відступ під тиском німецького наступу.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Прикордонна_битва_(1914)",
+                        imgTitle: "Бої біля Монса та Шарлеруа",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Battles_of_Charleroi_and_Mons_map.png' target='_blank'>Gsl, Public domain через Вікісховище</a>"
+                    },
+                    { 
+                        img: "uk_step3.jpg", 
+                        stepName: "Великий відступ і битва на Марні (кінець серпня — вересень 1914 р.)", 
+                        type: "ТИП: ВІДСТУП І КОНТРНАСТУП", 
+                        opponent: "Основний напрям: Північна Франція → Марна", 
+                        desc: "Після боїв під Монсом і Шарлеруа британські та французькі війська почали відступ на південь, намагаючись відірватися від німецьких армій. BEF зберіг боєздатність і продовжив відхід разом із французькими військами. На початку вересня німецький наступ досяг межі своїх можливостей, а 6–12 вересня союзники перейшли в контрнаступ у битві на Марні. Німецькі війська були змушені відступити на північ.<br><br><strong>Результат:</strong> Німецький наступ зупинено, Західний фронт стабілізовано.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Битва_на_Марні_(1914)",
+                        imgTitle: "Британські війська під час Великого відступу",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:The_Great_Retreat,_August_and_September_1914.jpg' target='_blank'>George Herbert Perris, Public domain через Вікісховище</a>"
+                    }
+                ]
+            },
+            russia: {
+                name: "Російська імперія",
+                blockType: "entente",
+                steps: [
+                    { 
+                        img: "russia_step1.jpg", 
+                        stepName: "Варіанти плану розгортання: А і Г (до 1914 р.)", 
+                        type: "ТИП: СТРАТЕГІЧНЕ ПЛАНУВАННЯ ТА МОБІЛІЗАЦІЙНЕ РОЗГОРТАННЯ", 
+                        opponent: "Основні противники: Німеччина та Австро-Угорщина", 
+                        desc: "Російське командування розробило два варіанти розгортання армії в межах мобілізаційного розкладу №19. Основним був варіант А: головні сили мали діяти проти Австро-Угорщини в Галичині, водночас Перша і Друга армії мали наступати у Східній Пруссії. Варіант Г передбачав посилення угруповання проти Німеччини, якщо вона спрямує основні сили на Східний фронт.<br><br><strong>Результат:</strong> Росія готувалася до одночасних дій проти Німеччини та Австро-Угорщини на двох основних напрямках.", 
+                        wiki: "https://uk.wikipedia.org/wiki/План_«А»",
+                        imgTitle: "Російські плани розгортання: варіанти А і Г",
+                        imgSource: "Джерело: <a href='https://dhc.westpoint.edu/wp-content/uploads/sites/6/2025/01/WWOne24.jpg' target='_blank'>West Point Defense History Center</a>"
+                    },
+                    { 
+                        img: "russia_step2.jpg", 
+                        stepName: "Наступ у Східній Пруссії та битва під Танненбергом (серпень 1914 р.)", 
+                        type: "ТИП: НАСТУП І КОНТРДІЇ", 
+                        opponent: "Основний напрям: Східна Пруссія", 
+                        desc: "Російські Перша та Друга армії розпочали наступ у Східній Пруссії, наступаючи з різних напрямків. Російське командування розраховувало скувати німецькі сили та змусити їх одночасно діяти проти двох армій. Наприкінці серпня німецькі війська зосередилися проти Другої армії генерала Самсонова. 26–30 серпня її було оточено й розгромлено в битві під Танненбергом. Перша армія Ренненкампфа не змогла своєчасно надати їй допомогу.<br><br><strong>Результат:</strong> Друга російська армія зазнала нищівної поразки; наступ у Східній Пруссії було зірвано.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Битва_під_Танненбергом_(1914)",
+                        imgTitle: "Наступ у Східній Пруссії",
+                        imgSource: "Джерело: <a href='https://dhc.westpoint.edu/wp-content/uploads/sites/6/2025/01/WWOne25.jpg' target='_blank'>West Point Defense History Center</a>"
+                    },
+                    { 
+                        img: "russia_step3.jpg", 
+                        stepName: "Галицька битва (серпень — вересень 1914 р.)", 
+                        type: "ТИП: НАСТУП", 
+                        opponent: "Основний противник: Австро-Угорщина", 
+                        desc: "На південно-західному напрямку російські армії одночасно розпочали наступ проти Австро-Угорщини. У Галицькій битві наприкінці серпня — на початку вересня російські війська завдали австро-угорській армії серйозної поразки. Вони зайняли значну частину Східної Галичини, а 3 вересня захопили Львів. Наступ продовжився в напрямку Карпат.<br><br><strong>Результат:</strong> Росія захопила значну частину Східної Галичини, австро-угорські війська відступили.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Галицька_битва",
+                        imgTitle: "Галицька битва, серпень — вересень 1914 р.",
+                        imgSource: "Джерело: <a href='https://dhc.westpoint.edu/wp-content/uploads/sites/6/2025/01/WWOne28.jpg' target='_blank'>West Point Defense History Center</a>"
+                    }
+                ]
+            },
+            austria: {
+                name: "Австро-Угорщина",
+                blockType: "alliance",
+                steps: [
+                    { 
+                        img: "austria_step1.jpg", 
+                        stepName: "Плани Б і Р: два можливі фронти (до 1914 р.)", 
+                        type: "ТИП: СТРАТЕГІЧНЕ ТА МОБІЛІЗАЦІЙНЕ ПЛАНУВАННЯ", 
+                        opponent: "Основні противники: Сербія та Росія", 
+                        desc: "Австро-угорське командування на чолі з Францом Конрадом фон Гьотцендорфом розробило різні варіанти розгортання військ залежно від противника. План Б (Plan B — Balkan) передбачав зосередження значної частини армії на Балканах для локальної війни проти Сербії та її швидкого розгрому. План Р (Plan R — Russland) передбачав перекидання основних сил на північний схід, до Галичини, для війни проти Росії за підтримки Німеччини. На випадок одночасної війни з Росією та Сербією передбачався комбінований варіант Р+Б.<br><br><strong>Результат:</strong> Австро-угорське командування створило систему варіантів розгортання, яка мала враховувати можливість війни як з одним противником, так і одночасно з Росією та Сербією.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Стратегічний_план_Австро-Угорщини_напередодні_Першої_світової_війни",
+                        imgTitle: "Австро-угорські плани Б і Р",
+                        imgSource: "Джерело: <a href='https://dhc.westpoint.edu/wp-content/uploads/sites/6/2025/04/WWOne04-01.jpg' target='_blank'>West Point Defense History Center</a>"
+                    },
+                    { 
+                        img: "austria_step2.jpg", 
+                        stepName: "Зміна плану (кінець липня — серпень 1914 р.)", 
+                        type: "ТИП: МОБІЛІЗАЦІЯ ТА ПЕРЕКИДАННЯ ВІЙСЬК", 
+                        opponent: "Основний напрям: Балкани → Галичина", 
+                        desc: "Наприкінці липня Австро-Угорщина почала мобілізацію за планом Б і спрямувала значну частину сил проти Сербії. Коли стало очевидно, що Росія вступає у війну, командування перейшло до варіанта Р+Б. Війська Другої армії, які вже прямували на Балкани, довелося розвертати й перекидати залізницею до Галичини. Ця зміна напрямку спричинила затримку: армія прибула на північно-східний фронт із запізненням.<br><br><strong>Результат:</strong> Заплановане розгортання було порушене; сили на Східному фронті зосереджувалися із запізненням.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Сербський_фронт_(Перша_світова_віййна)",
+                        imgTitle: "Перекидання військ із Балканського фронту до Галичини",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:EasternFront1914a.jpg' target='_blank'>Department of Military Art and Engineering (USMA West Point) через Вікісховище</a>"
+                    },
+                    { 
+                        img: "austria_step3.jpg", 
+                        stepName: "Катастрофа в Галичині (серпень — вересень 1914 р.)", 
+                        type: "ТИП: НАСТУП І ВІДСТУП", 
+                        opponent: "Основний противник: Росія", 
+                        desc: "Австро-угорські війська розпочали наступ у Галичині проти російської армії. Початкові успіхи змінилися серією важких поразок у Галицькій битві. Після боїв під Красником, Городком та іншими пунктами російські війська перейшли в контрнаступ. Австро-угорська армія була змушена відступити, залишивши більшу частину Галичини. Львів було втрачено 3 вересня, а фортеця Перемишль опинилася в облозі.<br><br><strong>Результат:</strong> Австро-Угорщина втратила значну частину Галичини; російська армія закріпилася на східному фронті.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Галицька_битва",
+                        imgTitle: "Бойові дії в Галичині",
+                        imgSource: "Джерело: <a href='https://commons.wikimedia.org/wiki/File:Battle_of_Galicia_August_1914_Bitka_za_Galicijo_avgust_1914.svg' target='_blank'>Goran tek-en & David Hazemali через Вікісховище (CC BY-SA 4.0)</a>"
+                    }
+                ]
+            },
+            italy: {
+                name: "Італія",
+                blockType: "alliance",
+                steps: [
+                    { 
+                        img: "italy_step1.jpg", 
+                        stepName: "Оборона північно-східного кордону (до 1914 р.)", 
+                        type: "ТИП: ОБОРОННЕ ВІЙСЬКОВЕ ПЛАНУВАННЯ", 
+                        opponent: "Основний противник: Австро-Угорщина", 
+                        desc: "Попри участь у Троїстому союзі, Італія готувалася насамперед до можливого конфлікту з Австро-Угорщиною. План начальника італійського Генерального штабу генерала Альберто Полліо 1912–1913 рр. передбачав розгортання військ уздовж північно-східного кордону: у гірських районах Трентіно та Кадоре зосереджувалися сили для прикриття гірського кордону, а основні сили в рівнинній частині розгорталися між річками П'яве та Тальяменто. План також допускав обмежені наступальні дії в районі Трентіно й Кадоре після початку війни.<br><br><strong>Результат:</strong> Італія готувалася передусім захистити північно-східний кордон і створити вигідне розгортання військ для подальших дій проти Австро-Угорщини.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Італія_в_Першій_світовій_війні", 
+                        overrideBg: "alliance",
+                        imgTitle: "Італійський план розгортання військ на північно-східному кордоні, 1913 р.",
+                        imgSource: "Джерело: S.M.E., «Situazione Esercito Italiano Guerra 1915–1918» / <a href='https://www.pizzofalcone.it/wp-content/uploads/2017/05/1494835877_image18.jpeg' target='_blank'>Pizzofalcone</a>"
+                    },
+                    { 
+                        img: "italy_step2.jpg", 
+                        stepName: "Оголошення нейтралітету (серпень 1914 р.)", 
+                        type: "ТИП: ПОЛІТИЧНЕ РІШЕННЯ", 
+                        opponent: "Основний противник: —", 
+                        desc: "Коли почалася Перша світова війна, Італія 3 серпня 1914 року оголосила про нейтралітет. Італійський уряд заявив, що Троїстий союз мав оборонний характер, а Австро-Угорщина розпочала війну проти Сербії без попередньої консультації з Італією. Протягом наступних місяців Італія вела переговори з обома сторонами, оцінюючи, які умови участі у війні відповідатимуть її інтересам.<br><br><strong>Результат:</strong> Італія не вступила у війну на боці Троїстого союзу та зберегла свободу вибору.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Італійський_фронт_Першої_світової_війни", 
+                        overrideBg: "italy-step2-bg",
+                        imgTitle: "Оголошення нейтралітету Італії у серпні 1914 р.",
+                        imgSource: "Джерело: <a href='https://flippedgeh.com/wp-content/uploads/2023/03/imgpreview.jpeg?w=768' target='_blank'>Flippedgeh</a>"
+                    },
+                    { 
+                        img: "italy_step3.jpg", 
+                        stepName: "Лондонський договір і новий фронт (квітень — травень 1915 р.)", 
+                        type: "ТИП: ДИПЛОМАТИЧНИЙ ПОВОРОТ І ВСТУП У ВІЙНУ", 
+                        opponent: "Основний противник: Австро-Угорщина", 
+                        desc: "26 квітня 1915 року Італія уклала з державами Антанти таємний Лондонський договір. Союзники пообіцяли їй територіальні здобутки за рахунок Австро-Угорщини, зокрема Трентіно, Південний Тіроль і Трієст. 23 травня 1915 року Італія оголосила війну Австро-Угорщині. На кордоні почав формуватися новий фронт, де основні бойові дії розгорнулися в районі річки Ізонцо та в Альпах.<br><br><strong>Результат:</strong> Італія вступила у війну на боці Антанти; відкрито новий Італійський фронт.", 
+                        wiki: "https://uk.wikipedia.org/wiki/Лондонська_угода_(1915)", 
+                        overrideBg: "entente",
+                        imgTitle: "Підписання Лондонського договору та підготовка до вступу у війну",
+                        imgSource: "Джерело: <a href='https://dhc.westpoint.edu/wp-content/uploads/sites/6/2025/04/WWOne14-01.jpg' target='_blank'>West Point Defense History Center</a>"
+                    }
+                ]
+            }
+        };
+
+        const quizData = [
+            { question: "Питання 1: Що спільного мали військові плани європейських держав напередодні Першої світової війни?", options: ["А) Передбачали лише оборону власної території", "Б) Визначали порядок мобілізації, розгортання військ і основні напрями майбутніх дій", "В) Створювалися вже після початку війни", "Г) Передбачали використання виключно військово-морських сил"], correctIndex: 1, explanation: "<strong>Пояснення:</strong> Військові плани заздалегідь визначали, як армія має мобілізуватися, де зосередитися та в якому напрямі діяти після початку війни." },
+            { question: "Питання 2: Чому військові плани держав передбачали дії одразу на кількох напрямках?", options: ["А) Щоб розподілити сили противника між різними фронтами", "Б) Щоб врахувати можливість війни проти кількох противників одночасно", "В) Щоб заздалегідь визначити, де і як розгортатимуться власні війська", "Г) Усі наведені варіанти правильні"], correctIndex: 3, explanation: "<strong>Пояснення:</strong> Європейські держави готувалися до війни в умовах союзів, тому їхні штаби мусили враховувати можливість одночасних дій проти кількох противників і заздалегідь планувати розгортання армій." },
+            { question: "Питання 3: Що було головною відмінністю британської підготовки до війни від підготовки Німеччини та Франції?", options: ["А) Британія не планувала жодної участі у війні на континенті", "Б) Британія робила основну ставку на флот і готувала обмежений експедиційний корпус для підтримки Франції", "В) Британія планувала зосередити основну армію в Бельгії", "Г) Британія готувалася першою завдати удару по Німеччині на суші"], correctIndex: 1, explanation: "<strong>Пояснення:</strong> Британська стратегія значною мірою спиралася на перевагу Королівського флоту та морську блокаду. Для сухопутної війни на континенті передбачалося використання професійного BEF, який мав підтримати французькі війська." },
+            { question: "Питання 4: Чому Німеччина планувала спочатку розгромити Францію, а вже потім зосередити основні сили проти Росії?", options: ["А) Росія мала намір вступити у війну пізніше за Францію", "Б) Росії, через величезну територію та слабшу транспортну мережу, потрібен був значний час для мобілізації", "В) Німеччина не мала спільного кордону з Росією", "Г) Франція погодилася не чинити опору, якщо Німеччина першою нападе на Росію"], correctIndex: 1, explanation: "<strong>Пояснення:</strong> Російська імперія мала величезну територію та менш розвинену залізничну мережу. Німецьке командування розраховувало, що російська мобілізація триватиме довше, ніж французька, і цим хотіло скористатися для швидкого розгрому Франції." },
+            { question: "Питання 5: Яке рішення німецького командування зменшило силу головного удару на Заході порівняно з початковим задумом Шліффена?", options: ["А) Відмова від наступу через Бельгію", "Б) Зменшення сил правого крила та посилення інших напрямків, зокрема Східної Пруссії й Ельзасу", "В) Перенесення головного удару з Парижа на Лондон", "Г) Повна відмова від наступальних дій проти Франції"], correctIndex: 1, explanation: "<strong>Пояснення:</strong> Мольтке поступово змінював успадкований план: посилював сили на інших напрямках і зменшував концентрацію військ на правому крилі. У результаті німецький наступ не мав тієї сили й масштабу охоплення, які передбачав початковий задум Шліффена." },
+            { question: "Питання 6: Що стало безпосереднім приводом для вступу Великої Британії у Першу світову війну?", options: ["А) Напад Німеччини на Францію", "Б) Російський наступ у Східній Пруссії", "В) Порушення Німеччиною нейтралітету Бельгії", "Г) Поразка французької армії в Ельзасі"], correctIndex: 2, explanation: "<strong>Пояснення:</strong> Німецьке вторгнення в нейтральну Бельгію порушило міжнародні зобов'язання щодо її нейтралітету. 4 серпня 1914 року Велика Британія оголосила Німеччині війну." },
+            { question: "Питання 7: Який висновок найточніше характеризує перебіг Битви на кордонах у серпні 1914 року?", options: ["А) Німеччина одразу здійснила задуманий Шліффеном розгром Франції", "Б) Франція успішно реалізувала План XVII та витіснила німецькі війська", "В) Німецькі війська досягли значних успіхів, але союзники були змушені відступити, а швидкої перемоги Німеччина не здобула", "Г) BEF самостійно зупинив головний наступ німецької армії"], correctIndex: 2, explanation: "<strong>Пояснення:</strong> У боях під Шарлеруа та Монсом німецькі війська змусили французькі й британські сили відступити. Проте ці успіхи не привели до швидкого розгрому Франції, як передбачав німецький задум." },
+            { question: "Питання 8: Що найкраще пояснює, чому військові плани держав у серпні 1914 року почали відрізнятися від реального перебігу війни?", options: ["А) Генеральні штаби не мали жодних планів до початку війни", "Б) Плани довелося пристосовувати до опору противника, дій союзників і несподіваного розвитку подій", "В) Усі держави від самого початку відмовилися від наступальних операцій", "Г) Війна розпочалася раніше, ніж європейські держави очікували"], correctIndex: 1, explanation: "<strong>Пояснення:</strong> Довоєнні плани будувалися на певних припущеннях щодо швидкості мобілізації, дій противника та поведінки союзників. Реальна війна внесла свої корективи: опір Бельгії, вступ Великої Британії, наступ Росії та дії французьких і британських військ змусили командування змінювати початкові розрахунки." }
+        ];
+
+        let currentCountryKey = null;
+        let currentStepIndex = 0;
+
+        function switchBlock(blockNum) {
+            document.querySelectorAll('.block-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.page-nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(`block-${blockNum}`).classList.add('active');
+            document.querySelectorAll('.page-nav-btn')[blockNum - 1].classList.add('active');
+            
+            localStorage.setItem('activeHistoryBlock', blockNum);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMapFullscreen() {
+            document.getElementById('mapContainer').classList.toggle('fullscreen');
+        }
+
+        function openCountryModal(countryKey) {
+            currentCountryKey = countryKey;
+            currentStepIndex = 0;
+            updateModalContent();
+            document.getElementById('countryModalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCountryModal() {
+            document.getElementById('countryModalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function handleModalOutsideClick(event) {
+            if (event.target.id === 'countryModalOverlay') {
+                closeCountryModal();
+            }
+        }
+
+        function changeModalStep(direction) {
+            const country = countriesData[currentCountryKey];
+            const newIndex = currentStepIndex + direction;
+            if (newIndex >= 0 && newIndex < country.steps.length) {
+                currentStepIndex = newIndex;
+                updateModalContent();
+            }
+        }
+
+        function updateModalContent() {
+            const country = countriesData[currentCountryKey];
+            const step = country.steps[currentStepIndex];
+
+            document.getElementById('modalCountryTitle').textContent = country.name;
+            document.getElementById('modalStepImg').src = step.img;
+            document.getElementById('modalImgTitle').innerHTML = step.imgTitle;
+            document.getElementById('modalImgSource').innerHTML = step.imgSource;
+            document.getElementById('modalStepName').textContent = step.stepName;
+            document.getElementById('modalStepType').textContent = step.type;
+            document.getElementById('modalStepOpponent').textContent = step.opponent;
+            document.getElementById('modalStepDesc').innerHTML = step.desc;
+            
+            const wikiBtn = document.getElementById('modalWikiLink');
+            wikiBtn.href = step.wiki;
+            wikiBtn.textContent = "Стаття у Вікіпедії";
+
+            document.getElementById('modalStepIndicator').textContent = `Крок ${currentStepIndex + 1} з ${country.steps.length}`;
+            
+            document.getElementById('modalPrevBtn').disabled = (currentStepIndex === 0);
+            document.getElementById('modalNextBtn').disabled = (currentStepIndex === country.steps.length - 1);
+
+            const modalContentEl = document.getElementById('countryModalContent');
+            modalContentEl.style.backgroundColor = "";
+            if (step.overrideBg === "alliance") {
+                modalContentEl.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--alliance-light');
+            } else if (step.overrideBg === "entente") {
+                modalContentEl.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--entente-light');
+            } else if (step.overrideBg === "italy-step2-bg") {
+                modalContentEl.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--italy-step2');
+            } else {
+                modalContentEl.style.backgroundColor = (country.blockType === "entente") ? 
+                    getComputedStyle(document.documentElement).getPropertyValue('--entente-light') : 
+                    getComputedStyle(document.documentElement).getPropertyValue('--alliance-light');
+            }
+        }
+
+        function openLightbox() {
+            const country = countriesData[currentCountryKey];
+            const step = country.steps[currentStepIndex];
+            document.getElementById('lightboxImg').src = step.img;
+            document.getElementById('lightboxOverlay').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxOverlay').classList.remove('active');
+        }
+
+        function closeLightboxOnOutside(event) {
+            if (event.target.id === 'lightboxOverlay') {
+                closeLightbox();
+            }
+        }
+
+        function changeLightboxStep(direction) {
+            const country = countriesData[currentCountryKey];
+            const newIndex = currentStepIndex + direction;
+            if (newIndex >= 0 && newIndex < country.steps.length) {
+                currentStepIndex = newIndex;
+                updateModalContent();
+                document.getElementById('lightboxImg').src = country.steps[currentStepIndex].img;
+            }
+        }
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = '';
+            const savedState = JSON.parse(localStorage.getItem('historyQuizStateV14') || '{}');
+
+            quizData.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+
+                const questionEl = document.createElement('div');
+                questionEl.className = 'quiz-question';
+                questionEl.textContent = q.question;
+                card.appendChild(questionEl);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                const qState = savedState[qIndex] || { wrongAttempts: [], solved: false };
+
+                q.options.forEach((opt, optIndex) => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+
+                    const msg = document.createElement('span');
+                    msg.className = 'try-again-msg';
+                    msg.textContent = 'Спробуй ще!';
+
+                    if (qState.solved) {
+                        btn.disabled = true;
+                        if (optIndex === q.correctIndex) btn.classList.add('correct');
+                        else if (qState.wrongAttempts.includes(optIndex)) btn.classList.add('incorrect');
+                    } else {
+                        if (qState.wrongAttempts.includes(optIndex)) {
+                            btn.disabled = true;
+                            btn.classList.add('incorrect');
+                            msg.classList.add('visible');
+                        }
+                    }
+
+                    btn.onclick = () => handleAnswer(qIndex, optIndex);
+                    optContainer.appendChild(btn);
+                    optContainer.appendChild(msg);
+                    optionsGrid.appendChild(optContainer);
+                });
+
+                card.appendChild(optionsGrid);
+
+                const explanationEl = document.createElement('div');
+                explanationEl.className = 'explanation';
+                explanationEl.innerHTML = q.explanation;
+                if (qState.solved) explanationEl.classList.add('visible');
+
+                card.appendChild(explanationEl);
+                quizContainer.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qIndex, optIndex) {
+            const q = quizData[qIndex];
+            const savedState = JSON.parse(localStorage.getItem('historyQuizStateV14') || '{}');
+
+            if (!savedState[qIndex]) savedState[qIndex] = { wrongAttempts: [], solved: false };
+
+            if (optIndex === q.correctIndex) {
+                savedState[qIndex].solved = true;
+            } else {
+                if (!savedState[qIndex].wrongAttempts.includes(optIndex)) {
+                    savedState[qIndex].wrongAttempts.push(optIndex);
+                }
+                if (savedState[qIndex].wrongAttempts.length >= 3) {
+                    savedState[qIndex].solved = true;
+                }
+            }
+
+            localStorage.setItem('historyQuizStateV14', JSON.stringify(savedState));
+            initQuiz();
+        }
+
+        function resetQuiz() {
+            localStorage.removeItem('historyQuizStateV14');
+            initQuiz();
+        }
+
+        function toggleHint(btn) {
+            const hintContent = btn.nextElementSibling;
+            if (hintContent.style.display === 'block') {
+                hintContent.style.display = 'none';
+                btn.textContent = 'Показати підказку';
+            } else {
+                hintContent.style.display = 'block';
+                btn.textContent = 'Сховати підказку';
+            }
+        }
+
+        window.onscroll = function() {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = function() {
+            const savedBlock = localStorage.getItem('activeHistoryBlock');
+            if (savedBlock) {
+                switchBlock(parseInt(savedBlock));
+            }
+            initQuiz();
+        };
+    </script>
+</body>
+</html>
